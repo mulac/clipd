@@ -1,14 +1,15 @@
-use std::path::PathBuf;
+pub mod cli;
 use structopt::StructOpt;
 
-#[derive(Debug, StructOpt)]
-#[structopt(name = "clipd", about = "A slightly smart clipboard.")]
-struct Opt {
-    #[structopt(parse(from_os_str))]
-    pub file: PathBuf,
-}
-
 fn main() {
-    let opt = Opt::from_args();
-    println!("{:?}", opt.file);
+    let opt = cli::Opt::from_args();
+    match opt.cmd {
+        cli::Command::Copy { key, value} => {
+            println!("Copying! Key: {:?}, Value: {:?}", key, value)
+        },
+
+        cli::Command::Paste { key } => {
+            println!("Pasting {:?}!", key)
+        }
+    };  
 }
