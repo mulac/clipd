@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 structopt = "0.3.26"
+toml = "0.5"
+serde = "1.0.137"
+serde_derive = "1.0.137"
