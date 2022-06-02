@@ -2,7 +2,7 @@ use toml;
 use serde_derive::{Serialize, Deserialize};
 use std::io::Read;
 
-trait Clipboard {
+pub trait Clipboard {
     fn add(&mut self, key: String, value: String);
     fn get(&self, key: String) -> String;
     fn show();
@@ -12,12 +12,12 @@ trait Clipboard {
 pub struct ClipdFS {
     root_path: String,
     count: i32,
-    custom_keys: std::collections::HashMap<String, i32>,
+    custom_keys: std::collections::HashMap<String, String>,
 }
 
 impl ClipdFS {
     pub fn new() -> ClipdFS {
-        ClipdFS::from_file("~/.clipd/default/config.toml")
+        ClipdFS::from_file("/home/calum/.clipd/default/config.toml")
     }
 
     fn from_file(file: &str) -> ClipdFS {
@@ -43,6 +43,8 @@ impl Clipboard for ClipdFS {
         /    Copy value into file
         */
         self.count += 1;
+        self.custom_keys.insert(key, value);
+        // println!("after new count: {:?}", self);
         self.save().unwrap();
     }
 
@@ -72,7 +74,7 @@ mod test {
     fn test_clipdfs_roundtrip() {
         // Create ting
         let toml_struct = super::ClipdFS {
-            root_path: "/tmp/clipd/config.toml".to_string(),
+            root_path: "/home/calum/.clipd/default/config.toml".to_string(),
             count: 0,
             custom_keys: std::collections::HashMap::new(),
         };
@@ -81,10 +83,10 @@ mod test {
         let toml_serialized = toml::to_string(&toml_struct).unwrap();
         
         // write to file
-        std::fs::write("/tmp/clipd/config.toml", toml_serialized.clone()).unwrap();
+        std::fs::write("/home/calum/.clipd/default/config.toml", toml_serialized.clone()).unwrap();
         // read from file
         let mut toml_str = String::new();
-        std::fs::File::open("/tmp/clipd/config.toml").and_then(|mut f| f.read_to_string(&mut toml_str)).unwrap();
+        std::fs::File::open("/home/calum/.clipd/default/config.toml").and_then(|mut f| f.read_to_string(&mut toml_str)).unwrap();
 
         // deserialize ting
         let toml_deserialized: super::ClipdFS = toml::from_str(&toml_str).unwrap();
