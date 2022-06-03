@@ -13,11 +13,11 @@ pub enum Command {
     #[structopt(visible_alias = "c", about = "Copy string into the clipboard")]
     Copy {
         
-        #[structopt(short, long, default_value = "1", 
+        #[structopt(short, long,
             help = "Optionally associate a custom key with the value copied to the clipboard. \
-            The numbers {1, ..., n} are always used as keys for the last n items clipped, \
-            with key = 1 being the most recent item.")]
-        key: String,
+            The numbers {0, ..., n-1} are always used as keys for the last n items clipped, \
+            with key = 0 being the most recent item.")]
+        key: Option<String>,
 
         #[structopt(parse(from_str), 
             help = "Specifies the value to be copied to the clipboard")]
@@ -29,8 +29,8 @@ pub enum Command {
 
         #[structopt(parse(from_str), default_value = "1", 
             help = "Use the associated key to retrieve items from the clipboard. \
-            The numbers {1, ..., n} can be used for the last n items added, \
-            with key = 1 being the most recent item.")]
+            The numbers {0, ..., n-1} can be used for the last n items added, \
+            with key = 0 being the most recent item.")]
         key: String,
     },
 }
