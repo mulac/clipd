@@ -8,7 +8,7 @@ pub trait Clipboard {
 pub mod clipd_fs {
     
 use serde_derive::{Serialize, Deserialize};
-use std::io::{Read, Result};
+use std::io::Read;
 use std::path::PathBuf;
 use uuid::Uuid;
 
@@ -51,12 +51,6 @@ impl Container {
             ordered_uuids: std::collections::VecDeque::new(),
             custom_keys: std::collections::HashMap::new(),
         }
-    }
-
-    fn new_and_save(name: String) -> Container {
-        let container = Container::new(name);
-        container.save().expect("could not save container with name {name}");
-        container
     }
 
     fn from_file(config_path: PathBuf) -> Container {
