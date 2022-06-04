@@ -1,5 +1,5 @@
 # clipd
-A slightly smart clipboard
+A slightly smart clipboard, persistent after shutdown
 
 ## Usage Examples
 
@@ -7,9 +7,10 @@ A slightly smart clipboard
 clipd copy "something i must remember"
 clipd paste
 
-cat notes.txt | clipd c --key notes
+echo "bad things happened" > /tmp/error.log
+cat /tmp/error.log | clipd c --key error
 clipd p notes 
-# contents of notes.txt
+# bad things happend
 
 clipd p 1
 # something i must remember
