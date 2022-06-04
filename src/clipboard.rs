@@ -1,49 +1,67 @@
 pub trait Clipboard {
     fn add(&mut self, key: Option<String>, value: String);
-    fn get(&self, key: String) -> String;
-    fn show();
+    fn get(&self, key: String) -> Option<String>;
+    fn clear(&mut self);
+    fn show(&self);
 }
 
 pub mod clipd_fs {
     
 use serde_derive::{Serialize, Deserialize};
-use std::io::Read;
+use std::io::{Read, Result};
 use std::path::PathBuf;
 use uuid::Uuid;
 
+use super::Clipboard;
+
 static ROOT_PATH: &'static str = "/home/calum/.clipd";
 static CONFIG_FNAME: &'static str = "config.toml";
+fn path(name: &str)-> PathBuf{PathBuf::from(ROOT_PATH).join(name)}
+fn config_path(name: &str)-> PathBuf{path(name).join(CONFIG_FNAME)}
+
+pub fn open(name: Option<String>) -> impl Clipboard {
+    let name = name.unwrap_or("default".to_string());
+    let path = path(&name);
+    let config_path = config_path(&name);
+
+    if path.exists() {
+        return Container::from_file(config_path)
+    } else {
+        let c = Container::new(name);
+        std::fs::create_dir_all(path).expect("failed to create dirs at {path}");
+        c.save().expect("can't create new container {name} at path {c.config_path()}");
+        return c
+    }
+}
+
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct Container {
+struct Container {
     name: String,
     count: u32,
-    ordered_uuids: std::vec::Vec<String>,
+    ordered_uuids: std::collections::VecDeque<String>,
     custom_keys: std::collections::HashMap<String, String>,
 }
 
 impl Container {
-    pub fn new() -> Container {
-        Container {
-            name: "default".to_string(),
-            count: 0,
-            ordered_uuids: vec![],
-            custom_keys: std::collections::HashMap::new(),
-        }
-    }
-
-    pub fn new_with_name(name: String) -> Container {
+    fn new(name: String) -> Container {
         Container {
             name: name,
             count: 0,
-            ordered_uuids: vec![],
+            ordered_uuids: std::collections::VecDeque::new(),
             custom_keys: std::collections::HashMap::new(),
         }
     }
 
-    pub fn from_file(path: &str) -> Container {
+    fn new_and_save(name: String) -> Container {
+        let container = Container::new(name);
+        container.save().expect("could not save container with name {name}");
+        container
+    }
+
+    fn from_file(config_path: PathBuf) -> Container {
         let mut toml_str = String::new();
-        std::fs::File::open(path).and_then(|mut f| f.read_to_string(&mut toml_str)).unwrap();
+        std::fs::File::open(config_path).and_then(|mut f| f.read_to_string(&mut toml_str)).unwrap();
         toml::from_str(&toml_str).unwrap() // TODO: use `unwrap_or_else` to return create a directory and config if not exists
     }
 
@@ -53,29 +71,17 @@ impl Container {
         Ok(())
     }
 
-    fn path(&self) -> PathBuf {
-        PathBuf::from(ROOT_PATH).join(&self.name)
-    }
+    fn path(&self) -> PathBuf {path(&self.name)}
 
-    fn config_path(&self) -> PathBuf {
-        self.path().join(CONFIG_FNAME)
-    }
+    fn config_path(&self) -> PathBuf {config_path(&self.name)}
 }
 
 impl super::Clipboard for Container {
     fn add(&mut self, key: Option<String>, value: String) {
-        /* 
-        /    Increment the item count
-        /    If needed, add mapping between custom key and conceptual number key
-        /    Calculate actual number key
-        /  Create file /clipd/default/[ACTUAL_NUMBER_KEY]
-        /    Copy value into file
-        */
-
         let uuid = Uuid::new_v4();
 
         self.count += 1;
-        self.ordered_uuids.push(uuid.to_string());
+        self.ordered_uuids.push_front(uuid.to_string());
         if let Some(k) = key {
             self.custom_keys.insert(k, uuid.to_string());
         }
@@ -84,31 +90,20 @@ impl super::Clipboard for Container {
         self.save().unwrap();
     }
 
-    fn get(&self, key: String) -> String {
-        /* 
-        /    Extract item count
-        /    If needed, get associated conceptual number key from custom key
-        /    calculate actual number key
-        /  Open ~/clipd/default/[ACTUAL_NUMBER_KEY].txt
-        /    Read entire file to get the value
-        /  Return value
-        */
-
-        let mut path = self.path();
-
-        // TODO: move to a fancy match
-        if let Some(uuid) = self.custom_keys.get(&key) {
-            path.push(uuid);
-        } else if let Ok(n) = key.parse::<u32>() {
-            let idx = self.ordered_uuids.len().checked_sub((n+1) as usize).unwrap();
-            path.push(&self.ordered_uuids[idx])
+    fn get(&self, key: String) -> Option<String> {
+        if let Ok(n) = key.parse::<usize>() {
+            return std::fs::read_to_string(self.path().join(&self.ordered_uuids[n])).ok();
         } else {
-            return "".to_string();
+            let uuid = self.custom_keys.get(&key)?;
+            return std::fs::read_to_string(self.path().join(uuid)).ok();
         }
-        std::fs::read_to_string(path).unwrap()
     }
 
-    fn show() {
+    fn clear(&mut self) {
+        std::fs::remove_dir_all(self.path()).unwrap();
+    }
+
+    fn show(&self) {
 
     }
 }
@@ -121,7 +116,7 @@ mod test {
     #[test]
     fn test_clipdfs_roundtrip() {
         // Create ting
-        let toml_struct = super::Container::new();
+        let toml_struct = super::Container::new("default".to_string());
         println!("{:?}", toml_struct);
         // serialize ting
         let toml_serialized = toml::to_string(&toml_struct).unwrap();

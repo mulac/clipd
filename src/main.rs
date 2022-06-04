@@ -4,18 +4,20 @@ use clipboard::Clipboard;
 use structopt::StructOpt;
 
 fn main() {
-    // TODO: FACTORY!
-    let mut cb = clipboard::clipd_fs::Container::from_file("/home/calum/.clipd/default/config.toml");
     let opt = cli::Opt::from_args();
+    let mut cb = clipboard::clipd_fs::open(opt.container);
     match opt.cmd {
         cli::Command::Copy { key, value} => {
-            println!("created.. {:?}", cb);
-            println!("Copying! Key: {:?}, Value: {:?}", key, value);
             cb.add(key, value);
         },
 
         cli::Command::Paste { key } => {
-            println!("{}", cb.get(key));
+            println!("{}", cb.get(key).unwrap());
+        }
+
+        cli::Command::Clear => {
+            // TODO: add a warning
+            cb.clear();
         }
     };  
 }

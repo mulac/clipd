@@ -5,6 +5,8 @@ use structopt::StructOpt;
 pub struct Opt {
     #[structopt(subcommand)]
     pub cmd: Command,
+
+    pub container: Option<String>,
 }
 
 #[derive(Debug, StructOpt)]
@@ -27,10 +29,12 @@ pub enum Command {
     #[structopt(visible_alias = "p", about = "Paste string from clipboard to stdout")]
     Paste {
 
-        #[structopt(parse(from_str), default_value = "1", 
+        #[structopt(parse(from_str), default_value = "0", 
             help = "Use the associated key to retrieve items from the clipboard. \
             The numbers {0, ..., n-1} can be used for the last n items added, \
             with key = 0 being the most recent item.")]
         key: String,
     },
+
+    Clear,
 }
