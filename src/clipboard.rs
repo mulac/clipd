@@ -5,7 +5,19 @@ pub trait Clipboard {
     fn show(&self);
 }
 
-pub mod clipd_fs {
+pub enum ClipboardType {
+    ClipdFs
+}
+
+pub fn create(ctype: ClipboardType, container: String) -> impl Clipboard {
+    match ctype {
+        ClipboardType::ClipdFs => {
+            clipd_fs::open(container)
+        }
+    }
+}
+
+mod clipd_fs {
     
 use serde_derive::{Serialize, Deserialize};
 use std::io::Read;
@@ -19,8 +31,7 @@ static CONFIG_FNAME: &'static str = "config.toml";
 fn path(name: &str)-> PathBuf{PathBuf::from(ROOT_PATH).join(name)}
 fn config_path(name: &str)-> PathBuf{path(name).join(CONFIG_FNAME)}
 
-pub fn open(name: Option<String>) -> impl Clipboard {
-    let name = name.unwrap_or("default".to_string());
+pub fn open(name: String) -> impl Clipboard {
     let path = path(&name);
     let config_path = config_path(&name);
 
