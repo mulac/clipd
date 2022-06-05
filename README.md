@@ -5,9 +5,16 @@ A slightly smart clipboard using the filesystem under ~/.clipd to persist after 
 
 **Simple copy**
 ```
-clipd copy "something i must remember"
+cowsay "clipd is great" | clipd copy
 clipd paste
-# "something i must remember"
+ _________________
+< clipd is great! >
+ -----------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
 ```
 
 **Access using number**
@@ -43,7 +50,8 @@ cargo install --path .
 
 ## Roadmap
 0. Improve error handling
-1. Implement the `clipd show` command to show a preview of the top ten values in a container
-2. Encrypt data stored at rest
-3. Add the ability to fetch from X11/Windows/OSX clipboard (`clipd copy` with no value should do this)
-4. Create a daemon to constantly listen to system clipboard
+1. Add support for stdin
+2. Implement the `clipd show` command to show a preview of the top ten values in a container
+3. Encrypt data stored at rest
+4. Add the ability to fetch from X11/Windows/OSX clipboard (`clipd copy` with no value should do this)
+5. Create a daemon to constantly listen to system clipboard

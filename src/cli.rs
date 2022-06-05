@@ -39,4 +39,6 @@ pub enum Command {
     },
 
     Clear,
+
+    Show,
 }
