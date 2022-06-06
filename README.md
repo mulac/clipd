@@ -5,8 +5,8 @@ A slightly smart clipboard using the filesystem under ~/.clipd to persist after 
 
 **Simple copy**
 ```
-cowsay "clipd is great" | clipd copy
-clipd paste
+$ cowsay "clipd is great" | clipd copy
+$ clipd paste
  _________________
 < clipd is great! >
  -----------------
@@ -19,31 +19,31 @@ clipd paste
 
 **Copy from system clipboard**
 ```
-clipd copy
-clipd paste
+# clipd copy
+# clipd paste
 ```
 
 **Access using number**
 ```
-clipd c "first thing"
-clipd c "second thing"
-clipd c "third thing"
-clipd p -k     # third thing
-clipd p -k 1   # second thing
-clipd p -k 2   # first thing
+$ clipd c "first thing"
+$ clipd c "second thing"
+$ clipd c "third thing"
+$ clipd p -k                # third thing
+$ clipd p -k 1              # second thing
+$ clipd p -k 2              # first thing
 ```
 
 **Use a custom key**
 ```
-clipd c "+44789564264" --key phone
-clipd p --key phone
+$ clipd c "+44789564264" --key phone
+$ clipd p --key phone
 ```
 
 **Use containers**
 ```
-clipd error c "404 Not Found"
-clipd debug c "Some Warning"
-clipd error paste   # 404 Not Found
+$ clipd error c "404 Not Found"
+$ clipd debug c "Some Warning"
+$ clipd error paste                 # 404 Not Found
 ```
 
 ## Installation
