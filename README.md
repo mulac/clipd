@@ -17,6 +17,12 @@ clipd paste
                 ||     ||
 ```
 
+**Copy from system clipboard**
+```
+clipd copy
+clipd paste
+```
+
 **Access using number**
 ```
 clipd c "first thing"
