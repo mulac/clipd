@@ -25,7 +25,7 @@ pub enum Command {
 
         #[structopt(parse(from_str), 
             help = "Specifies the value to be copied to the clipboard")]
-        value: String
+        value: Option<String>
     },
 
     #[structopt(visible_alias = "p", about = "Paste string from clipboard to stdout")]
