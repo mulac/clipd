@@ -37,7 +37,7 @@ pub fn open(name: String) -> impl super::Container {
         return Container::from_file(config_path)
     }
 
-    std::fs::create_dir_all(path).expect("failed to create dirs at {path}");
+    std::fs::create_dir_all(&path).unwrap_or_else(|err| panic!("failed to create dirs at {path:?}: {err}"));
     let c = Container::new(name);
     c.save();
     c
@@ -78,13 +78,18 @@ impl Container {
 
     fn from_file(config_path: PathBuf) -> Container {
         let mut toml_str = String::new();
-        std::fs::File::open(config_path).and_then(|mut f| f.read_to_string(&mut toml_str)).unwrap();
-        toml::from_str(&toml_str).unwrap() // TODO: use `unwrap_or_else` to return create a directory and config if not exists
+        std::fs::File::open(&config_path).and_then(|mut f| f.read_to_string(&mut toml_str)).unwrap();
+        // TODO: handle out of sync config files more gracefully
+        toml::from_str(&toml_str)
+            .unwrap_or_else(|err| panic!("[Container] Failed to deserialise config file at {config_path:?},
+            it is possible config file has been edited or become out of sync with the in memory representation of a Container: {err}"))
     }
 
     fn save(&self) {
-        let toml_str = toml::to_string(&self).unwrap();
-        std::fs::write(self.config_path(), toml_str).expect("can't create new container {name} at path {c.config_path()}");
+        let toml_str = toml::to_string(&self)
+            .unwrap_or_else(|err| panic!("[Container] Failed to serialise container {self:?}: {err}"));
+        std::fs::write(self.config_path(), toml_str)
+            .unwrap_or_else(|err| panic!("[Container] Failed to save container {} at path {:?}: {}", self.name, self.config_path(), err));
     }
 
     fn get_value(&self, uuid: &String) -> std::io::Result<String> {
