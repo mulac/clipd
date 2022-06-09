@@ -1,7 +1,20 @@
 pub trait Container {
+    /// Add a new value to the container
+    ///
+    /// `key` is an optional String that can be associated to the value 
+    /// and later used with `Container.get`
     fn add(&mut self, key: Option<String>, value: String);
+    /// Returns Some(value) if the given `key` is found, else None 
+    ///
+    /// `key` can either be a custom_key given when the value was added with
+    /// `Container.add` or it can be a zero indexed number that will be associated
+    /// with the nth last added value.
     fn get(&self, key: String) -> Option<String>;
+    /// Returns a pretty-formatted string of values stored in the Container.
+    /// It is not guaranteed to show all values and should only be used for human
+    /// display
     fn show(&self) -> String;
+    /// **WARNING** This will completely and permanently empty the container of all values
     fn clear(&mut self);
 }
 
@@ -17,8 +30,10 @@ pub fn create(ctype: ContainerType, container: String) -> impl Container {
     }
 }
 
+
+/// A filesystem oriented implementation of a Container
+/// ---
 mod clipd_fs {
-    
 use serde_derive::{Serialize, Deserialize};
 use std::{io::Read, path::PathBuf};
 use uuid::Uuid;
@@ -104,7 +119,6 @@ impl Container {
 impl super::Container for Container {
     fn add(&mut self, key: Option<String>, value: String) {
         // TODO: If key is already in use, delete old reference to key in self.items 
-
         let item = Item::new(key.map(|k| vec![k]));
 
         self.count += 1;
