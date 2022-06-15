@@ -6,6 +6,6 @@ install:
 	cargo install --path .
 
 systemd:
-	cp systemd/clipd.service $(HOME)/.config/systemd/user/
+	cp etc/clipd.service $(HOME)/.config/systemd/user/
 	systemctl --user daemon-reload
 	systemctl --user enable clipd.service

@@ -2,8 +2,8 @@
 A slightly smart clipboard using the filesystem under ~/.clipd to persist after shutdown.
 
 ```
-$ cowsay "clipd is great" | clipd copy
-$ clipd paste
+cowsay "clipd is great" | clipd copy
+clipd paste
  _________________
 < clipd is great! >
  -----------------
