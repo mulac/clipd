@@ -1,4 +1,8 @@
+use std::io::Read;
 use structopt::StructOpt;
+use clipd::{clipboard, container};
+use clipboard::{Clipboard, ClipboardType::X11};
+use container::{Container, ContainerType::ClipdFs};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "clipd", about = "A slightly smart clipboard.")]
@@ -41,4 +45,32 @@ pub enum Command {
     Clear,
 
     Show,
+}
+
+fn main() {
+    let opt = Opt::from_args();
+    let mut cnt = container::create(ClipdFs, opt.container);
+
+    match opt.cmd {
+        Command::Copy { key, value } => {
+            cnt.add(key, value.unwrap_or_else(|| {
+                // Copy from system clipboard if there isn't already bytes waiting from stdin (piped input)
+                if atty::is(atty::Stream::Stdin) {
+                    return clipboard::create(X11).paste()
+                }
+                
+                let mut buf = String::new();
+                std::io::stdin().read_to_string(&mut buf).expect("couldn't read from stdin");
+                buf
+            }));
+        },
+
+        Command::Paste { key } => {
+            println!("{}", cnt.get(key).unwrap());
+        }
+
+        Command::Clear => { cnt.clear() } // TODO: add a warning
+
+        Command::Show => { println!("{}", cnt.show()) }
+    };  
 }

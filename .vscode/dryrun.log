@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/calum/repos/clipd'
+cargo install --path .
+make: Leaving directory '/home/calum/repos/clipd'
+ 
