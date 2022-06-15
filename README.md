@@ -28,7 +28,7 @@ cargo install --path .
 ```
 
 This will install 2 binaries:  `clipd` and `clipdaemon`.  
- - `clipdaemon` will listen to your system clipboard and save everything in "system" container.
+ - `clipdaemon` will listen to your system clipboard and save everything in "sys" [container](#containers).
  - `clipd` is a command line tool to interface with the "~/.clipd" directory, see [examples](#examples).
 
 ### Systemd
@@ -38,7 +38,12 @@ make systemd
 ```
 
 ## Containers
-Containers are namespaces used to organize clippings.  
+Containers are namespaces used to organize your clippings.
+In the literal sense, a container is a directory within "~/.clipd" and is where all your clippings are stored.
+
+When no container is provided to `clipd`, it will use the "default" container.
+
+`clipdaemon` sends all clippings to the "sys" container.
 
 ## Examples
 **Mannually copy from system clipboard**
