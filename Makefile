@@ -1,9 +1,11 @@
-.PHONY: build systemd
+.PHONY: all build systemd
 
-build: 
+all: install systemd
+
+install: 
 	cargo install --path .
 
-systemd: build
+systemd:
 	cp systemd/clipd.service $(HOME)/.config/systemd/user/
 	systemctl --user daemon-reload
 	systemctl --user enable clipd.service
