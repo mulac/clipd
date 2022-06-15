@@ -32,7 +32,7 @@ This will install 2 binaries:  `clipd` and `clipdaemon`.
  - `clipd` is a command line tool to interface with the "~/.clipd" directory, see [examples](#examples).
 
 ### Systemd
-To automatically launch the clipdaemon on login the systemd service manager can be used.  Simply setup the user [service file](systemd/clipd.service) for your system or use the make target:
+To automatically launch the clipdaemon on login the systemd service manager can be used.  Simply setup the user [service file](etc/clipd.service) for your system or use the make target:
 ```
 make systemd
 ```
