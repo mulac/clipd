@@ -27,23 +27,24 @@ cd clipd
 cargo install --path .
 ```
 
+This will install 2 binaries:  `clipd` and `clipdaemon`.  
+ - `clipdaemon` will listen to your system clipboard and save everything in "system" container.
+ - `clipd` is a command line tool to interface with the "~/.clipd" directory, see [examples](#examples).
+
 ### Systemd
-To automatically launch the clipdaemon on login the systemd service manager can be used.  Simply setup the user [service file](systemd/clipd.service) for your system or use make as below.
+To automatically launch the clipdaemon on login the systemd service manager can be used.  Simply setup the user [service file](systemd/clipd.service) for your system or use the make target:
 ```
 make systemd
 ```
 
+## Containers
+Containers are namespaces used to organize clippings.  
 
-## Usage Examples
-**Copy from system clipboard**
+## Examples
+**Mannually copy from system clipboard**
 ```
 clipd copy
-clipd paste
-```
-
-**Mannually start the clipdaemon**
-```
-clipdaemon
+clipd paste     # The last thing you copied (ctrl-c)
 ```
 
 **Access using number**
