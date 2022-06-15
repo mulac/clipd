@@ -35,7 +35,7 @@ pub enum Command {
     #[structopt(visible_alias = "p", about = "Paste string from clipboard to stdout")]
     Paste {
 
-        #[structopt(short, long, default_value = "0", 
+        #[structopt(default_value = "0", 
             help = "Use the associated key to retrieve items from the clipboard. \
             The numbers {0, ..., n-1} can be used for the last n items added, \
             with key = 0 being the most recent item.")]

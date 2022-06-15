@@ -46,33 +46,37 @@ When no container is provided to `clipd`, it will use the "default" container.
 `clipdaemon` sends all clippings to the "sys" container.
 
 ## Examples
-**Mannually copy from system clipboard**
+**Copy from system clipboard (ctrl-c)**
 ```
-clipd copy
-clipd paste     # The last thing you copied (ctrl-c)
+clipd c
 ```
 
-**Access using number**
+**Paste the last thing you copied**
+```
+clipd p
+```
+
+**Paste using an index key**
 ```
 clipd c "first thing"
 clipd c "second thing"
 clipd c "third thing"
-clipd p -k                # third thing
-clipd p -k 1              # second thing
-clipd p -k 2              # first thing
+clipd p 0               # third thing
+clipd p 1               # second thing
+clipd p 2               # first thing
 ```
 
 **Use a custom key**
 ```
-clipd c "+44789564264" --key phone
-clipd p --key phone
+clipd c -k phone "+44789564264" 
+clipd p phone
 ```
 
 **Use containers**
 ```
-clipd error c "404 Not Found"
-clipd debug c "Some Warning"
-clipd error paste                 # 404 Not Found
+clipd my-container c "a value for my-container"
+clipd c "This will be copied to the default container"
+clipd my-container p                 # 404 Not Found
 ```
 
 **Sneak peek a container**
