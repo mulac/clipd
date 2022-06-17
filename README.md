@@ -89,8 +89,6 @@ clipd show
 
 ## Roadmap
 - Improve `clipd show`
-    - show only the first $n$ clippings
-    - truncate values if they are too long
     - show the container name in the table view
     - only show information about one clipping if a specific key is given
 - Encrypt clippings stored at rest

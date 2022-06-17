@@ -15,7 +15,7 @@ pub trait Container {
     /// Returns a pretty-formatted string of values stored in the Container.
     /// It is not guaranteed to show all values and should only be used for human
     /// display
-    fn show(&self) -> String;
+    fn show(&self, n: usize) -> String;
 
     /// **WARNING** This will completely and permanently empty the container of all values
     fn clear(&mut self);
@@ -38,6 +38,8 @@ mod clipd_fs {
     use std::{io::Read, path::PathBuf};
     use tabled::{builder::Builder, Style};
     use uuid::Uuid;
+
+    use crate::util::truncate_utf8;
 
     static ROOT: &'static str = ".clipd";
     static CONFIG_NAME: &'static str = "config.toml";
@@ -172,17 +174,31 @@ mod clipd_fs {
             std::fs::remove_dir_all(self.path()).unwrap();
         }
 
-        fn show(&self) -> String {
+        fn show(&self, n: usize) -> String {
+            let val_limit = 32;
             let mut view = Vec::new();
-            for item in &self.ordered_items {
+
+            for (i, item) in self.ordered_items.iter().enumerate() {
+                if i == n {
+                    break;
+                }
+                let val = self.get_value(&item.uuid).unwrap();
                 view.push([
-                    item.uuid.clone(),
+                    // ID
+                    item.uuid.clone().get(..8).unwrap().to_string(),
+                    // Custom Keys
                     format!("{:?}", item.custom_keys),
-                    self.get_value(&item.uuid).unwrap(),
+                    // Value Preview
+                    if val.len() <= val_limit {
+                        val
+                    } else {
+                        truncate_utf8(val.as_str(), val_limit).to_string() + "..."
+                    },
                 ]);
             }
 
             Builder::from_iter(view)
+                .set_columns(["ID", "Custom Keys", "Value"])
                 .index()
                 .build()
                 .with(Style::rounded())

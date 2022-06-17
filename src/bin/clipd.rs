@@ -42,9 +42,14 @@ pub enum Command {
         key: String,
     },
 
-    Clear,
+    Show {
 
-    Show,
+        #[structopt(short, default_value = "10", 
+            help = "Only show the n most recent values")]
+        n: usize,
+    },
+
+    Clear,
 }
 
 fn main() {
@@ -69,8 +74,8 @@ fn main() {
             println!("{}", cnt.get(key).unwrap());
         }
 
-        Command::Clear => { cnt.clear() } // TODO: add a warning
+        Command::Show { n } => { println!("{}", cnt.show(n)) }
 
-        Command::Show => { println!("{}", cnt.show()) }
+        Command::Clear => { cnt.clear() } // TODO: add a warning
     };  
 }
