@@ -48,42 +48,51 @@ When no container is provided to `clipd`, it will use the "default" container.
 `clipdaemon` sends all clippings to the "sys" container.
 
 ## Examples
+
 **Copy from system clipboard (ctrl-c)**
-```
-clipd c
-```
+
+```clipd copy```
+
+```clipd c```
+
 
 **Paste the last thing you copied**
-```
-clipd p
-```
+
+```clipd paste```
+
+```clipd p```
+
+```clipd```
 
 **Paste using an index key**
 ```
 clipd c "first thing"
 clipd c "second thing"
 clipd c "third thing"
-clipd p 0               # third thing
-clipd p 1               # second thing
-clipd p 2               # first thing
+clipd 0               # third thing
+clipd 1               # second thing
+clipd 2               # first thing
 ```
 
 **Use a custom key**
 ```
-clipd c -k phone "+44789564264" 
-clipd p phone
+clipd phone c "+44789564264" 
+clipd phone
 ```
 
-**Use containers**
+**Use custom containers**
 ```
-clipd my-container c "a value for my-container"
-clipd c "This will be copied to the default container"
-clipd my-container p                 # 404 Not Found
+clipd --container gcp c $PROJECT_ID
+clipd --container gcp                 # your-project-id
 ```
 
 **Sneak peek a container**
 ```
 clipd show
+```
+
+```
+clipd --container gcp show
 ```
 
 

@@ -7,7 +7,7 @@ use container::{Container, ContainerType::ClipdFs};
 #[derive(Debug, StructOpt)]
 #[structopt(name = "clipd", about = "A slightly smart clipboard.")]
 pub struct Opt {
-    #[structopt(
+    #[structopt(short, long,
         default_value = "default",
         help = "Specify a clipboard container")]
     pub container: String,
