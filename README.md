@@ -49,14 +49,14 @@ When no container is provided to `clipd`, it will use the "default" container.
 
 ## Examples
 
-**Copy from system clipboard (ctrl-c)**
+### Copy from system clipboard (ctrl-c)
 
 ```clipd copy```
 
 ```clipd c```
 
 
-**Paste the last thing you copied**
+### Paste the last thing you copied
 
 ```clipd paste```
 
@@ -64,7 +64,7 @@ When no container is provided to `clipd`, it will use the "default" container.
 
 ```clipd```
 
-**Paste using an index key**
+### Paste using an index key
 ```
 clipd c "first thing"
 clipd c "second thing"
@@ -82,7 +82,7 @@ second thing
 first thing
 ```
 
-**Use a custom key**
+### Use a custom key
 ```
 clipd phone c "+44789564264" 
 clipd phone
@@ -94,7 +94,7 @@ Output:
 +44789564264
 ```
 
-**Use custom containers**
+### Use custom containers
 ```
 clipd --container gcp c $PROJECT_ID
 clipd --container gcp
@@ -106,7 +106,7 @@ Output:
 your-project-id
 ```
 
-**Sneak peek a container**
+### Sneak peek a container
 ```
 clipd show
 ```
