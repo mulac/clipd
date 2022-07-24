@@ -129,4 +129,5 @@ Output:
     - show the container name in the table view
     - only show information about one clipping if a specific key is given
 - Encrypt clippings stored at rest
+- Improve error handling
 - Add support for Windows, OSX and Wayland
