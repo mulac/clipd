@@ -10,7 +10,7 @@ pub trait Container {
     /// `key` can either be a custom_key given when the value was added with
     /// `Container.add` or it can be a zero indexed number that will be associated
     /// with the nth last added value.
-    fn get(&self, key: String) -> Option<String>;
+    fn get(&self, key: Option<String>) -> Option<String>;
 
     /// Returns a pretty-formatted string of values stored in the Container.
     /// It is not guaranteed to show all values and should only be used for human
@@ -160,7 +160,8 @@ mod clipd_fs {
             self.save();
         }
 
-        fn get(&self, key: String) -> Option<String> {
+        fn get(&self, key: Option<String>) -> Option<String> {
+            let key = key.unwrap_or("0".to_string());
             if let Ok(n) = key.parse::<usize>() {
                 // TODO: out of bounds check
                 return std::fs::read_to_string(self.path().join(&self.ordered_items[n].uuid)).ok();
