@@ -69,9 +69,17 @@ When no container is provided to `clipd`, it will use the "default" container.
 clipd c "first thing"
 clipd c "second thing"
 clipd c "third thing"
-clipd 0               # third thing
-clipd 1               # second thing
-clipd 2               # first thing
+clipd 0
+clipd 1
+clipd 2 
+```
+
+Output:
+
+```
+third thing
+second thing
+first thing
 ```
 
 **Use a custom key**
@@ -80,10 +88,22 @@ clipd phone c "+44789564264"
 clipd phone
 ```
 
+Output:
+
+```
++44789564264
+```
+
 **Use custom containers**
 ```
 clipd --container gcp c $PROJECT_ID
-clipd --container gcp                 # your-project-id
+clipd --container gcp
+```
+
+Output:
+
+```
+your-project-id
 ```
 
 **Sneak peek a container**
@@ -91,10 +111,18 @@ clipd --container gcp                 # your-project-id
 clipd show
 ```
 
-```
-clipd --container gcp show
-```
+Output:
 
+```
+╭───┬──────────┬─────────────┬──────────────╮
+│   │    ID    │ Custom Keys │    Value     │
+├───┼──────────┼─────────────┼──────────────┤
+│ 0 │ b8cb2c17 │  ["phone"]  │ +44789564264 │
+│ 1 │ 79c5812b │     []      │ third thing  │
+│ 2 │ 8195e95a │     []      │ second thing │
+│ 3 │ cd4ab4a3 │     []      │ first thing  │
+╰───┴──────────┴─────────────┴──────────────╯
+```
 
 ## Roadmap
 - Improve `clipd show`
