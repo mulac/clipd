@@ -20,6 +20,14 @@ and since it uses the filesystem it allows you to easily sync your clippings acr
 different machines using something like [syncthing](https://github.com/syncthing/syncthing).
 
 ## Installation
+### Debian
+```
+curl -s --compressed "https://Mulac.github.io/ppa/KEY.gpg" | sudo apt-key add -
+sudo curl -s --compressed -o /etc/apt/sources.list.d/forbidden.list "https://Mulac.github.io/ppa/forbidden.list"
+sudo apt update
+sudo apt install clipd
+```
+
 ### From Source
 ```
 git clone https://github.com/Mulac/clipd.git

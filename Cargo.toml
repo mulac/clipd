@@ -2,7 +2,9 @@
 name = "clipd"
 version = "0.1.0"
 edition = "2021"
-
+authors = ["Calum Wallbridge"]
+readme = "README.md"
+description = "A slightly smart clipboard tool - leverage the filesystem to persist across machines after shutdown."
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
